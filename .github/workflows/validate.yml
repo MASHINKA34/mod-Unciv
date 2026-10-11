@@ -1,0 +1,41 @@
+# Validates the mod with the official Unciv `mod-ci` command on every push/PR.
+# Read-only on purpose: CI never commits or opens PRs. All commits in this repo
+# are made only under the owner's name, so the packed atlas is built locally
+# with `python tools/check_mod.py` and committed by hand.
+name: Validate mod
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Static checks + Unciv mod-ci (latest release)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LOG_LEVEL: INFO
+        run: python tools/check_mod.py
+
+      - name: Files mod-ci would change (stale atlas / deprecated uniques)
+        if: always()
+        run: |
+          git status --porcelain
+          git diff --stat

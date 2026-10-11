@@ -1,0 +1,34 @@
+# --- Local validation tooling (tools/check_mod.py downloads Unciv.jar here) ---
+tools/.cache/
+*.jar
+
+# --- Files Unciv desktop creates if it is ever launched from the repo root ---
+GameSettings.json
+SaveFiles/
+MultiplayerGames/
+lasterror.txt
+mods/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# --- Logs / temp ---
+*.log
+*.tmp
+*.bak
+*.part
+
+# --- Editors / OS ---
+.idea/
+.vscode/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# NOTE: game.atlas / game*.png / Atlases.json in the repo root are the packed
+# texture atlas. They MUST be committed (Android cannot pack images itself).

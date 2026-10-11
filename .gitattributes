@@ -1,2 +1,30 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Normalize text files to LF (Unciv CI runs on Linux; the game reads LF/CRLF fine)
+* text=auto eol=lf
+
+# Binary assets
+*.png      binary
+*.jpg      binary
+*.jpeg     binary
+*.aseprite binary
+*.ase      binary
+*.ogg      binary
+*.mp3      binary
+*.wav      binary
+*.ttf      binary
+*.otf      binary
+*.jar      binary
+
+# ---------------------------------------------------------------------------
+# NOT shipped to players.
+# The in-game "Download mod from URL" pulls GitHub's zip archive, which honours
+# export-ignore. Unciv rejects the archive ("Invalid Mod archive structure")
+# when unknown top-level entries outnumber known mod content, so every
+# dev-only file/folder in the repo root MUST be listed here.
+# ---------------------------------------------------------------------------
+/.gitattributes export-ignore
+/.gitignore     export-ignore
+/.editorconfig  export-ignore
+/.github        export-ignore
+/docs           export-ignore
+/tools          export-ignore
+/art-src        export-ignore
