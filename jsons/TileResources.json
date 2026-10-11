@@ -5,6 +5,18 @@
 		"uniques": [
 			"Stockpiled",
 			"Cannot be traded",
+			"Not shown on world screen",
+			"Will not be displayed in Civilopedia",
+			"Excluded from map editor",
+			"Doesn't generate naturally"
+		]
+	},
+	{
+		"name": "Hookahs",
+		"resourceType": "Strategic",
+		"uniques": [
+			"Comment [Every Hookah Lounge ever built gives 1 Hookah. Each Hookah gives +1 Happiness. Hookahs can be traded to other civilizations]",
+			"AI will buy at [100] Gold",
 			"Excluded from map editor",
 			"Doesn't generate naturally"
 		]

@@ -1,6 +1,10 @@
 {
 	"name": "Global Uniques",
 	"uniques": [
-		"[+1 Happiness] <for every [Hookah]>"
+		"Provides [1] [Hookahs] <for every [Hookah]> <hidden from users>",
+		"[+1 Happiness] <for every [Hookahs]>"
+	],
+	"unitUniques": [
+		"Gain [20] [Gold] <upon being defeated> <for [Shaheds] units> <hidden from users>"
 	]
 }

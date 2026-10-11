@@ -1,0 +1,27 @@
+[
+	{
+		"name": "Shahed Drone",
+		"unitType": "Drone",
+		"uniqueTo": "Shaheds",
+		"movement": 4,
+		"strength": 3,
+		"rangedStrength": 12,
+		"range": 2,
+		"cost": 25,
+		"uniques": [
+			"Self-destructs when attacking",
+			"All tiles cost 1 movement",
+			"Ignores Zone of Control",
+			"Can pass through impassable tiles",
+			"May travel on Water tiles without embarking",
+			"Ranged attacks may be performed over obstacles",
+			"No defensive terrain bonus",
+			"[+50]% Strength <starting from the [Medieval era]>",
+			"[+50]% Strength <starting from the [Renaissance era]>",
+			"[+50]% Strength <starting from the [Industrial era]>",
+			"[+50]% Strength <starting from the [Modern era]>",
+			"[+50]% Strength <starting from the [Atomic era]>"
+		],
+		"attackSound": "missile"
+	}
+]

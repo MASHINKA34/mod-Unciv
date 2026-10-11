@@ -1,0 +1,37 @@
+[
+	{
+		"name": "Shaheds",
+		"leaderName": "Saddam Hussein",
+		"adjective": ["Shahed"],
+		"preferredVictoryType": "Domination",
+
+		"startIntroPart1": "Saddam Hussein, leader of the Shaheds! Born in 1937 in the village of Al-Awja near Tikrit, you rose through the Ba'ath Party and ruled Iraq from 1979 to 2003. Your rule was marked by long wars with Iran and Kuwait and by harsh repression at home, and it ended with the invasion of 2003.",
+		"startIntroPart2": "Now a new nation gathers under your banner. Its weapon is the swarm: countless cheap drones that fly where armies cannot pass. Will the swarm darken the skies of the whole world?",
+
+		"declaringWar": "The sky above your cities no longer belongs to you.",
+		"attacked": "You have stirred the swarm. Now listen to it buzz.",
+		"defeated": "The swarm scatters... but it always returns.",
+		"introduction": "I am Saddam Hussein. My drones have been watching you for quite some time.",
+
+		"neutralHello": "Speak. The swarm is listening.",
+		"hateHello": "What now? My drones are already fueled.",
+
+		"tradeRequest": "A fair deal. Even drones need fuel.",
+		"afterPeace": "Peace, then. The drones will wait in their hangars.",
+
+		"outerColor": [58, 64, 42],
+		"innerColor": [235, 212, 150],
+		"uniqueName": "The Swarm",
+		"uniques": [
+			"[+25]% Production when constructing [Military] units [in all cities]",
+			"[-33]% maintenance costs <for [Military] units>",
+			"Earn [50]% of killed [Military] unit's [Cost] as [Gold]",
+			"[+15]% Strength <for [Military] units> <when adjacent to a [Military] unit>",
+			"Comment [Each military unit lost in battle gives 20 Gold]"
+		],
+		"cities": ["Baghdad", "Tikrit", "Al-Awja", "Basra", "Mosul", "Samarra", "Ramadi", "Fallujah",
+			"Nasiriyah", "Amarah", "Kut", "Hillah", "Diwaniyah", "Baqubah", "Haditha", "Tal Afar",
+			"Anah", "Rutba", "Al-Qaim", "Samawah", "Balad", "Baiji", "Zubair", "Fao", "Umm Qasr", "Habbaniyah"],
+		"spyNames": ["Rashid", "Tariq", "Karim", "Faisal", "Jamal", "Nadia", "Layla", "Hassan", "Samir", "Zaid"]
+	}
+]
