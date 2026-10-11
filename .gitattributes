@@ -25,6 +25,5 @@
 /.gitignore     export-ignore
 /.editorconfig  export-ignore
 /.github        export-ignore
-/docs           export-ignore
 /tools          export-ignore
 /art-src        export-ignore

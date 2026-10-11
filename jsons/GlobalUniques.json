@@ -5,6 +5,9 @@
 		"[+1 Happiness] <for every [Hookahs]>"
 	],
 	"unitUniques": [
-		"Gain [20] [Gold] <upon being defeated> <for [Shaheds] units> <hidden from users>"
+		"Gain [20] [Gold] <upon being defeated> <for [Shaheds] units> <hidden from users>",
+		"[This Unit] takes [100] damage <upon defeating a [Shaheds] unit> <hidden from users>",
+		"Turn this tile into a [Blast Crater] tile <upon being defeated> <for [Shaheds] units> <in [unimproved] tiles> <hidden from users>",
+		"[This Unit] takes [50] damage <upon ending a turn in a [All] tile> <in tiles adjacent to [Blast Crater] tiles> <hidden from users>"
 	]
 }

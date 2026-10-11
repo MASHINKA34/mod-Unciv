@@ -1,0 +1,11 @@
+[
+	{
+		"name": "Remove Blast Crater",
+		"turnsToBuild": 1,
+		"uniques": [
+			"Can be built outside your borders",
+			"Excluded from map editor"
+		],
+		"shortcutKey": "X"
+	}
+]
