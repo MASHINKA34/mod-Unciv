@@ -6,7 +6,8 @@
 ## Images
 
 <!-- Add every image here: file, author/tool, licence. -->
-- `Images/BuildingIcons/Hookah Lounge.png`, `Images/ResourceIcons/Hookah.png` —
+- `Images/BuildingIcons/Hookah Lounge.png`, `Images/ResourceIcons/Hookah.png`,
+  `Images/ResourceIcons/Hookahs.png` —
   original icons made for this mod by MASHINKA34 (sources in `art-src/`).
 
 ## Sounds

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100" color-interpolation="sRGB" fill="#FFFFFF">
+  <title>Hookah</title>
+  <desc>Large white hookah silhouette with a broad water flask, stout stem, bowl and short hose. No smoke or fine internal details. Transparent background.</desc>
+
+  <!-- Enlarged bowl and tray retain the building icon's profile. -->
+  <path d="M23 9 H49 C49 15 44 20 40 20 H32 C28 20 23 15 23 9 Z"/>
+  <path d="M32 18 H40 V29 H32 Z"/>
+  <path d="M17 25 H55 C55 29 50 32 45 32 H27 C22 32 17 29 17 25 Z"/>
+
+  <!-- A stout shaft and one collar survive reduction to 20 px. -->
+  <path d="M32 30 H40 V61 H32 Z"/>
+  <rect x="27" y="40" width="18" height="6" rx="3"/>
+
+  <!-- Solid, broad flask without small cutouts. -->
+  <path d="M29 57 H43 V62 C43 65 46 66 49 68 C57 72 62 77 60 83 C58 90 49 92 36 92 C23 92 14 90 12 83 C10 77 15 72 23 68 C26 66 29 65 29 62 Z"/>
+
+  <!-- Compact hose; a thick raised mouthpiece stays distinct. -->
+  <path d="M43 55 C56 50 64 54 65 64 C66 72 63 81 73 82 C83 83 85 73 85 62" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+  <path d="M81.5 64 L82 46 C82 44 83.5 43 85.5 43 C87.5 43 89 44 89 46 L88.5 64 Z"/>
+</svg>
