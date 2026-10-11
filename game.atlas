@@ -1,27 +1,83 @@
 
 game.png
-size: 256, 128
+size: 1024, 512
 format: RGBA8888
 filter: MipMapLinearLinear, MipMapLinearLinear
 repeat: none
+BuildingIcons/Assembly Shop
+  rotate: false
+  xy: 4, 112
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
 BuildingIcons/Hookah Lounge
   rotate: false
-  xy: 112, 4
+  xy: 4, 4
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+BuildingPortraits/Assembly Shop
+  rotate: false
+  xy: 4, 220
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+LeaderIcons/Saddam Hussein
+  rotate: false
+  xy: 268, 220
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+NationIcons/Shaheds
+  rotate: false
+  xy: 796, 268
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 ResourceIcons/Hookah
   rotate: false
-  xy: 4, 4
+  xy: 796, 376
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 ResourceIcons/Hookahs
   rotate: false
-  xy: 4, 4
+  xy: 796, 376
   size: 100, 100
   orig: 100, 100
+  offset: 0, 0
+  index: -1
+TileSets/AbsoluteUnits/Units/Shahed Drone
+  rotate: false
+  xy: 904, 420
+  size: 64, 56
+  orig: 64, 56
+  offset: 0, 0
+  index: -1
+TileSets/FantasyHex/Units/Shahed Drone
+  rotate: false
+  xy: 112, 76
+  size: 32, 28
+  orig: 32, 28
+  offset: 0, 0
+  index: -1
+UnitIcons/Shahed Drone
+  rotate: false
+  xy: 112, 112
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+UnitPortraits/Shahed Drone
+  rotate: false
+  xy: 532, 220
+  size: 256, 256
+  orig: 256, 256
   offset: 0, 0
   index: -1

@@ -9,6 +9,10 @@
 - `Images/BuildingIcons/Hookah Lounge.png`, `Images/ResourceIcons/Hookah.png`,
   `Images/ResourceIcons/Hookahs.png` —
   original icons made for this mod by MASHINKA34 (sources in `art-src/`).
+- Shaheds: `Images/NationIcons/Shaheds.png`, `Images/UnitIcons/Shahed Drone.png`,
+  `Images/BuildingIcons/Assembly Shop.png`, unit sprites in `Images/TileSets/`,
+  portraits in `Images/UnitPortraits/`, `Images/BuildingPortraits/`, `Images/LeaderIcons/`,
+  and `preview.png` — original art made for this mod by MASHINKA34 (sources in `art-src/`).
 
 ## Sounds
 

@@ -28,8 +28,7 @@
 			"Earn [50]% of killed [Military] unit's [Cost] as [Gold]",
 			"[+15]% Strength <for [Military] units> <when adjacent to a [Military] unit>",
 			"Comment [Each military unit lost in battle gives 20 Gold]",
-			"Comment [Whoever kills a Shahed unit dies in the explosion]",
-			"Comment [A Blast Crater is left where a Shahed unit dies. Every unit that ends its turn in or next to it takes 50 damage until Workers clear it]"
+			"Comment [Whoever kills a Shahed unit in close combat dies in the explosion. Ranged attacks are safe]"
 		],
 		"cities": ["Baghdad", "Tikrit", "Al-Awja", "Basra", "Mosul", "Samarra", "Ramadi", "Fallujah",
 			"Nasiriyah", "Amarah", "Kut", "Hillah", "Diwaniyah", "Baqubah", "Haditha", "Tal Afar",
