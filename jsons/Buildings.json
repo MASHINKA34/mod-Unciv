@@ -1,0 +1,13 @@
+[
+	{
+		"name": "Hookah Lounge",
+		"cost": 60,
+		"hurryCostModifier": 25,
+		"happiness": 1,
+		"uniques": [
+			"Comment [Can be built in the same city again and again. Each Hookah Lounge permanently gives +1 Happiness]",
+			"Instantly provides [1] [Hookah]",
+			"Remove [Hookah Lounge] [in this city] <hidden from users>"
+		]
+	}
+]

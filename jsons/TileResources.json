@@ -1,0 +1,12 @@
+[
+	{
+		"name": "Hookah",
+		"resourceType": "Strategic",
+		"uniques": [
+			"Stockpiled",
+			"Cannot be traded",
+			"Excluded from map editor",
+			"Doesn't generate naturally"
+		]
+	}
+]
