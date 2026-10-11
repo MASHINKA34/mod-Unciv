@@ -58,6 +58,8 @@ GOOD_FOLDERS = [r"Images", r"jsons", r"maps", r"music", r"scenarios", r"sounds",
 GOOD_FILES = [r".*\.atlas", r".*\.png", r"preview\.jpg", r".*\.md", r"Atlases\.json",
               r"\.nomedia", r"license"]
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg"}
+# RulesetErrorSeverity names as printed by `mod-ci` (RulesetErrorList.getErrorText)
+VALIDATOR_FINDING = re.compile(r"^(OK|WarningOptionsOnly|Warning|ErrorOptionsOnly|Error):(.*)$")
 BOM = b"\xef\xbb\xbf"
 
 
@@ -356,7 +358,7 @@ def ensure_unciv_jar(version: str | None, offline: bool) -> Path:
 
 # --------------------------------------------------------------------------- step 4: mod-ci
 
-def run_mod_ci(jar: Path) -> int:
+def run_mod_ci(jar: Path, allow_warnings: bool) -> int:
     LOG.info("Step 4/4: running Unciv mod-ci (pack images + autoupdate uniques + validate ruleset)")
     java = shutil.which("java")
     if not java:
@@ -367,7 +369,8 @@ def run_mod_ci(jar: Path) -> int:
     has_git = shutil.which("git") is not None
     before = git_status_snapshot() if has_git else set()
 
-    cmd = [java, "-jar", str(jar), "mod-ci"]
+    # Force UTF-8 console output, otherwise Windows code pages turn Unciv's bracket glyphs into '?'
+    cmd = [java, "-Dstdout.encoding=UTF-8", "-Dstderr.encoding=UTF-8", "-jar", str(jar), "mod-ci"]
     LOG.info("exec: java -jar %s mod-ci (cwd=%s, timeout=%ds)", rel(jar), REPO_ROOT, MOD_CI_TIMEOUT_S)
     started = time.perf_counter()
     try:
@@ -377,13 +380,26 @@ def run_mod_ci(jar: Path) -> int:
         raise ToolingError(f"mod-ci timed out after {MOD_CI_TIMEOUT_S}s") from e
     elapsed_ms = (time.perf_counter() - started) * 1000
 
+    # Validator findings look like "<Severity>: <text>", suggestions continue on indented lines.
+    # mod-ci exits 0 even for warnings and misspelled uniques, so findings are counted here.
     lines = [l for l in proc.stdout.splitlines() if l.strip()]
+    findings: list[list[str]] = []
     for line in lines:
+        match = VALIDATOR_FINDING.match(line)
         if line.startswith("Picked up JAVA_TOOL_OPTIONS"):
             LOG.debug("mod-ci | %s", line)
+        elif match:
+            findings.append([match.group(1), match.group(2).strip(": ")])
+        elif findings and line[:1].isspace():
+            findings[-1][1] += " | " + line.strip()
         else:
             LOG.info("mod-ci | %s", line)
-    LOG.info("mod-ci finished in %dms with exit code %d, %d output line(s)", elapsed_ms, proc.returncode, len(lines))
+    LOG.info("mod-ci finished in %dms with exit code %d, %d output line(s), %d validator finding(s)",
+             elapsed_ms, proc.returncode, len(lines), len(findings))
+    errors = [f for f in findings if f[0].startswith("Error")]
+    for severity, text in findings:
+        LOG.log(logging.ERROR if severity.startswith("Error") else logging.WARNING,
+                "Unciv validator [%s]: %s", severity, text)
 
     if has_git:
         changed = sorted(git_status_snapshot() - before)
@@ -395,12 +411,17 @@ def run_mod_ci(jar: Path) -> int:
         else:
             LOG.info("mod-ci changed no files (atlas already up to date)")
 
-    if proc.returncode == 1:
-        LOG.error("Unciv ruleset validation reported errors (see 'mod-ci |' lines above)")
-        return 1
-    if proc.returncode != 0:
+    if proc.returncode not in (0, 1):
         raise ToolingError(f"mod-ci crashed with exit code {proc.returncode}")
-    LOG.info("Unciv ruleset validation passed (warnings, if any, are listed above)")
+    if proc.returncode == 1 or errors:
+        LOG.error("Unciv ruleset validation reported %d error(s), %d warning(s)", len(errors),
+                  len(findings) - len(errors))
+        return 1
+    if findings and not allow_warnings:
+        LOG.error("Unciv ruleset validation reported %d warning(s); fix them or rerun with --allow-warnings",
+                  len(findings))
+        return 1
+    LOG.info("Unciv ruleset validation passed with %d warning(s)", len(findings))
     return 0
 
 
@@ -411,6 +432,8 @@ def main() -> int:
     parser.add_argument("--skip-unciv", action="store_true", help="only static checks, no Unciv.jar")
     parser.add_argument("--unciv-version", help="Unciv release tag, e.g. 4.22.8 (default: latest)")
     parser.add_argument("--offline", action="store_true", help="use the newest cached Unciv.jar, no network")
+    parser.add_argument("--allow-warnings", action="store_true",
+                        help="do not fail on Unciv validator warnings (errors still fail)")
     args = parser.parse_args()
 
     run_id = setup_logging()
@@ -427,7 +450,7 @@ def main() -> int:
         elif errors:
             LOG.error("Skipping Unciv mod-ci because %d static error(s) must be fixed first", errors)
         else:
-            errors += run_mod_ci(ensure_unciv_jar(args.unciv_version, args.offline))
+            errors += run_mod_ci(ensure_unciv_jar(args.unciv_version, args.offline), args.allow_warnings)
     except ToolingError as e:
         LOG.error("Tooling failure, mod state unknown: %s", e)
         LOG.info("check_mod end: result=TOOLING_FAILURE in %.1fs", time.perf_counter() - started)
