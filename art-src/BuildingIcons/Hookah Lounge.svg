@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100" color-interpolation="sRGB" fill="#FFFFFF">
+  <title>Hookah Lounge</title>
+  <desc>White hookah silhouette with two smoke curls, a fluted stem, a water flask and a curved hose. Transparent background.</desc>
+
+  <!-- Smoke: two soft, open curls above the bowl. -->
+  <g fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round">
+    <path d="M30 28 C36 24 33 21 29 19 C23 16 25 10 31 10 C34 10 36 11 37 13"/>
+    <path d="M42 27 C49 24 50 20 45 17 C41 14 42 11 46 10"/>
+  </g>
+
+  <!-- Bowl, neck and shallow ash tray. -->
+  <path d="M24 33 H46 C46 37 42 40 38 40 H32 C28 40 24 37 24 33 Z"/>
+  <path d="M32 38 H38 V45 H32 Z"/>
+  <path d="M19 43 H51 C51 46 47 48 43 48 H27 C23 48 19 46 19 43 Z"/>
+
+  <!-- Two wide collars on a continuous stem. -->
+  <path d="M32 46 H38 V65 H32 Z"/>
+  <rect x="28" y="51" width="14" height="4" rx="2"/>
+  <rect x="29" y="60" width="12" height="4" rx="2"/>
+
+  <!-- Rounded flask; the water line is a transparent 3 px cutout. -->
+  <path fill-rule="evenodd" d="M29 64 H41 V68 C41 71 48 71 52 75 C57 79 57 85 52 89 C48 92 42 92 35 92 C28 92 22 92 18 89 C13 85 13 79 18 75 C22 71 29 71 29 68 Z M24 79 H46 A1.5 1.5 0 0 1 46 82 H24 A1.5 1.5 0 0 1 24 79 Z"/>
+
+  <!-- Hose and a longer, gently tilted mouthpiece. -->
+  <path d="M42 64 C53 58 63 60 64 70 C65 77 60 85 69 87 C81 91 83 76 84 64" fill="none" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round"/>
+  <path d="M81.5 65 L84 49 C84.3 47.5 85.5 47 87 47.3 C88.5 47.6 89 48.8 88.7 50.3 L86 65.8 Z"/>
+</svg>
