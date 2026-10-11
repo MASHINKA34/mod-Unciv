@@ -13,6 +13,10 @@ Steps:
      game.atlas + game*.png + Atlases.json, auto-updates deprecated uniques,
      validates the ruleset against vanilla. Files it changed are listed so
      they can be committed (Android cannot pack atlases itself).
+  5. Cross-reference (mod-ci does not do this for extension mods): every
+     uniqueTo/replaces/unitType/tech/resource reference exists in mod + vanilla,
+     every unique and modifier matches a template from the jar's UniqueType
+     class, object-name parameters and `for every [X]` countables exist.
 
 Usage:
   python tools/check_mod.py                    # full check with latest Unciv
@@ -141,7 +145,7 @@ def git_status_snapshot() -> set[str]:
 # --------------------------------------------------------------------------- step 1: layout
 
 def check_layout() -> int:
-    LOG.info("Step 1/4: checking top-level layout as seen by the in-game downloader")
+    LOG.info("Step 1/5: checking top-level layout as seen by the in-game downloader")
     entries = sorted(p for p in REPO_ROOT.iterdir() if p.name != ".git")
     names = [p.name for p in entries]
     LOG.debug("Top-level entries in working tree (%d): %s", len(names), names)
@@ -197,7 +201,7 @@ def read_utf8_no_bom(path: Path) -> str | None:
 
 
 def check_text_files() -> int:
-    LOG.info("Step 2/4: checking JSON, translations and image file names")
+    LOG.info("Step 2/5: checking JSON, translations and image file names")
     errors = 0
 
     json_files = sorted((REPO_ROOT / "jsons").rglob("*.json")) if (REPO_ROOT / "jsons").is_dir() else []
@@ -298,7 +302,7 @@ def newest_cached_jar() -> Path | None:
 
 
 def ensure_unciv_jar(version: str | None, offline: bool) -> Path:
-    LOG.info("Step 3/4: locating Unciv.jar (requested version=%s, offline=%s)", version or "latest", offline)
+    LOG.info("Step 3/5: locating Unciv.jar (requested version=%s, offline=%s)", version or "latest", offline)
     if version and (CACHE_DIR / version / "Unciv.jar").is_file():
         jar = CACHE_DIR / version / "Unciv.jar"
         LOG.info("Cache hit: %s", rel(jar))
@@ -359,7 +363,7 @@ def ensure_unciv_jar(version: str | None, offline: bool) -> Path:
 # --------------------------------------------------------------------------- step 4: mod-ci
 
 def run_mod_ci(jar: Path, allow_warnings: bool) -> int:
-    LOG.info("Step 4/4: running Unciv mod-ci (pack images + autoupdate uniques + validate ruleset)")
+    LOG.info("Step 4/5: running Unciv mod-ci (pack images + autoupdate uniques + validate ruleset)")
     java = shutil.which("java")
     if not java:
         raise ToolingError("java not found in PATH: install JDK 21 (e.g. Eclipse Temurin 21) and retry")
@@ -425,6 +429,228 @@ def run_mod_ci(jar: Path, allow_warnings: bool) -> int:
     return 0
 
 
+# --------------------------------------------------------------------------- step 5: cross-reference
+
+VANILLA_DIR = "jsons/Civ V - Gods & Kings/"
+UNIQUE_TYPE_CLASS = "com/unciv/models/ruleset/unique/UniqueType.class"
+STAT_NAMES = {"Production", "Food", "Gold", "Science", "Culture", "Happiness", "Faith"}
+CIV_FILTER_KEYWORDS = {"All", "all", "Major", "City-States", "City-State", "Human player", "AI player"}
+SIMPLE_COUNTABLES = {"turns", "year", "Cities", "Units", "Completed Policy branches"}
+PLACEHOLDER = re.compile(r"\[[^\]]*\]")
+# Template placeholders that must name one concrete object; values: collections that may contain it
+NAME_PARAMS = {
+    "resource": ("TileResources",), "stockpiledResource": ("TileResources",),
+    "stockpile": ("TileResources", "<stat>"), "buildingName": ("Buildings",),
+    "promotion": ("UnitPromotions",), "tech": ("Techs",), "era": ("Eras",),
+    "terrainName": ("Terrains",), "improvementName": ("TileImprovements",),
+}
+# (json file, field, collections the value must exist in) for plain object references
+OBJECT_REFERENCES = [
+    ("Units", "unitType", ("UnitTypes",)), ("Units", "uniqueTo", ("Nations", "<civFilter>")),
+    ("Units", "replaces", ("Units",)), ("Units", "upgradesTo", ("Units",)),
+    ("Units", "requiredTech", ("Techs",)), ("Units", "obsoleteTech", ("Techs",)),
+    ("Units", "requiredResource", ("TileResources",)), ("Units", "promotions", ("UnitPromotions",)),
+    ("Buildings", "uniqueTo", ("Nations", "<civFilter>")), ("Buildings", "replaces", ("Buildings",)),
+    ("Buildings", "requiredTech", ("Techs",)), ("Buildings", "requiredBuilding", ("Buildings",)),
+    ("Buildings", "requiredResource", ("TileResources",)), ("Buildings", "specialistSlots", ("Specialists",)),
+    ("TileResources", "revealedBy", ("Techs",)), ("TileResources", "improvement", ("TileImprovements",)),
+    ("TileResources", "terrainsCanBeFoundOn", ("Terrains",)),
+]
+
+
+def parse_lenient_json(text: str):
+    """JSON plus the libGDX extras Unciv's own files use: // and /* */ comments, trailing commas."""
+    out, i, n = [], 0, len(text)
+
+    def skip_blank(j: int) -> int:
+        while j < n:
+            if text[j] in " \t\r\n":
+                j += 1
+            elif text.startswith("//", j):
+                k = text.find("\n", j)
+                j = n if k < 0 else k
+            elif text.startswith("/*", j):
+                k = text.find("*/", j + 2)
+                j = n if k < 0 else k + 2
+            else:
+                break
+        return j
+
+    while i < n:
+        c = text[i]
+        if c == '"':
+            j = i + 1
+            while j < n and text[j] != '"':
+                j += 2 if text[j] == "\\" else 1
+            out.append(text[i:j + 1])
+            i = j + 1
+        elif text.startswith("//", i) or text.startswith("/*", i):
+            i = skip_blank(i)
+        elif c == "," and skip_blank(i + 1) < n and text[skip_blank(i + 1)] in "]}":
+            i += 1  # trailing comma
+        else:
+            out.append(c)
+            i += 1
+    return json.loads("".join(out))
+
+
+def class_utf8_constants(data: bytes) -> list[str]:
+    """All CONSTANT_Utf8 strings of a .class file (where Kotlin keeps enum template literals)."""
+    import struct
+    count, pos, strings, index = struct.unpack_from(">H", data, 8)[0], 10, [], 1
+    while index < count:
+        tag = data[pos]
+        if tag == 1:
+            length = struct.unpack_from(">H", data, pos + 1)[0]
+            strings.append(data[pos + 3:pos + 3 + length].decode("utf-8", errors="replace"))
+            pos += 3 + length
+        elif tag in (3, 4, 9, 10, 11, 12, 17, 18):
+            pos += 5
+        elif tag in (5, 6):
+            pos += 9
+            index += 1  # 8-byte constants take two slots
+        elif tag in (7, 8, 16, 19, 20):
+            pos += 3
+        elif tag == 15:
+            pos += 4
+        else:
+            raise ToolingError(f"Unknown constant pool tag {tag} at offset {pos} in {UNIQUE_TYPE_CLASS}")
+        index += 1
+    return strings
+
+
+def object_names(ruleset: dict, collection: str) -> set[str]:
+    data = ruleset.get(collection)
+    if not isinstance(data, list):
+        return set()
+    names = set()
+    for obj in data:
+        if not isinstance(obj, dict):
+            continue
+        if "name" in obj:
+            names.add(obj["name"])
+        # Techs.json is a list of columns, each holding its own "techs" list
+        names.update(t["name"] for t in obj.get("techs", []) if isinstance(t, dict) and "name" in t)
+    return names
+
+
+def load_reference_data(jar: Path) -> tuple[dict, dict, list[tuple[re.Pattern, list[str], str]]]:
+    import zipfile
+    started = time.perf_counter()
+    vanilla, mod = {}, {}
+    with zipfile.ZipFile(jar) as z:
+        for name in z.namelist():
+            if name.startswith(VANILLA_DIR) and name.endswith(".json") and name.count("/") == 2:
+                stem = name[len(VANILLA_DIR):-5]
+                try:
+                    vanilla[stem] = parse_lenient_json(z.read(name).decode("utf-8"))
+                except (json.JSONDecodeError, UnicodeDecodeError) as e:
+                    LOG.warning("Cannot parse vanilla %s from %s (%s): references to it are not checked",
+                                name, jar.name, e)
+        templates = [s for s in class_utf8_constants(z.read(UNIQUE_TYPE_CLASS)) if s and "\n" not in s]
+    for path in sorted((REPO_ROOT / "jsons").glob("*.json")):
+        mod[path.stem] = json.loads(path.read_text(encoding="utf-8"))
+
+    compiled = []
+    for t in templates:
+        parts = PLACEHOLDER.split(t)
+        names = [p[1:-1] for p in PLACEHOLDER.findall(t)]
+        pattern = r"\[((?:[^\[\]]|\[[^\[\]]*\])*)\]".join(re.escape(p) for p in parts)
+        compiled.append((re.compile("^" + pattern + "$"), names, t))
+    LOG.info("Loaded vanilla rules (%d files) and %d unique template candidates from %s in %dms",
+             len(vanilla), len(compiled), jar.name, (time.perf_counter() - started) * 1000)
+    return vanilla, mod, compiled
+
+
+def split_unique(unique: str) -> tuple[str, list[str]]:
+    main, modifiers, depth, current = "", [], 0, ""
+    for ch in unique:
+        if ch == "<" and depth == 0:
+            depth, current = 1, ""
+        elif ch == ">" and depth == 1:
+            depth = 0
+            modifiers.append(current.strip())
+        elif depth:
+            current += ch
+        else:
+            main += ch
+    return main.strip(), modifiers
+
+
+def iter_uniques(obj, where: str):
+    if isinstance(obj, dict):
+        label = f"{where}/{obj['name']}" if "name" in obj else where
+        for key, value in obj.items():
+            if key in ("uniques", "unitUniques") and isinstance(value, list):
+                for unique in value:
+                    yield f"{label}.{key}", unique
+            else:
+                yield from iter_uniques(value, label)
+    elif isinstance(obj, list):
+        for item in obj:
+            yield from iter_uniques(item, where)
+
+
+def run_cross_reference(jar: Path) -> int:
+    LOG.info("Step 5/5: cross-referencing objects and uniques against vanilla rules (mod-ci skips these "
+             "for extension mods)")
+    vanilla, mod, templates = load_reference_data(jar)
+    combined = {c: object_names(vanilla, c) | object_names(mod, c) for c in set(vanilla) | set(mod)}
+    combined["Specialists"] = combined.get("Specialists", set())
+    errors = 0
+
+    def known(value: str, collections: tuple[str, ...]) -> bool:
+        for collection in collections:
+            if collection == "<stat>" and value in STAT_NAMES:
+                return True
+            if collection == "<civFilter>" and value in CIV_FILTER_KEYWORDS:
+                return True
+            if value in combined.get(collection, set()):
+                return True
+        return False
+
+    checked_refs = 0
+    for file, field, collections in OBJECT_REFERENCES:
+        for obj in mod.get(file, []) if isinstance(mod.get(file), list) else []:
+            raw = obj.get(field)
+            values = list(raw) if isinstance(raw, (list, dict)) else [raw] if raw is not None else []
+            for value in values:
+                checked_refs += 1
+                if not known(value, collections):
+                    LOG.error("jsons/%s.json: %s.%s = \"%s\" does not exist in %s (mod + vanilla)",
+                              file, obj.get("name"), field, value, "/".join(collections))
+                    errors += 1
+
+    checked_uniques = 0
+    for file, data in mod.items():
+        for where, unique in iter_uniques(data, f"jsons/{file}.json"):
+            main, modifiers = split_unique(unique)
+            for kind, text in [("unique", main)] + [("modifier", m) for m in modifiers]:
+                checked_uniques += 1
+                matches = [(names, m.groups()) for pattern, names, _ in templates if (m := pattern.match(text))]
+                if not matches:
+                    LOG.error("%s: %s \"%s\" matches no Unciv unique template (typo?) in \"%s\"",
+                              where, kind, text, unique)
+                    errors += 1
+                    continue
+                names, params = matches[0]
+                LOG.debug("%s: %s \"%s\" ok, params=%s", where, kind, text, dict(zip(names, params)))
+                for name, value in zip(names, params):
+                    if name in NAME_PARAMS and not known(value, NAME_PARAMS[name]):
+                        LOG.error("%s: [%s] in \"%s\" must be an existing %s (mod + vanilla)",
+                                  where, value, unique, "/".join(NAME_PARAMS[name]))
+                        errors += 1
+                    if name == "countable" and "[" not in value and not value.lstrip("-").isdigit() \
+                            and value not in SIMPLE_COUNTABLES | STAT_NAMES \
+                            and value not in combined.get("TileResources", set()):
+                        LOG.error("%s: countable [%s] in \"%s\" is neither a number, a stat, a resource nor a "
+                                  "known keyword - Unciv would silently count 0", where, value, unique)
+                        errors += 1
+    LOG.info("Cross-reference: %d object reference(s), %d unique part(s) checked, %d error(s)",
+             checked_refs, checked_uniques, errors)
+    return errors
+
+
 # --------------------------------------------------------------------------- main
 
 def main() -> int:
@@ -446,11 +672,13 @@ def main() -> int:
         errors = check_layout()
         errors += check_text_files()
         if args.skip_unciv:
-            LOG.info("Steps 3-4 skipped (--skip-unciv): images NOT packed, ruleset NOT validated by Unciv")
+            LOG.info("Steps 3-5 skipped (--skip-unciv): images NOT packed, ruleset NOT validated by Unciv")
         elif errors:
             LOG.error("Skipping Unciv mod-ci because %d static error(s) must be fixed first", errors)
         else:
-            errors += run_mod_ci(ensure_unciv_jar(args.unciv_version, args.offline), args.allow_warnings)
+            jar = ensure_unciv_jar(args.unciv_version, args.offline)
+            errors += run_mod_ci(jar, args.allow_warnings)
+            errors += run_cross_reference(jar)
     except ToolingError as e:
         LOG.error("Tooling failure, mod state unknown: %s", e)
         LOG.info("check_mod end: result=TOOLING_FAILURE in %.1fs", time.perf_counter() - started)
