@@ -1,8 +1,8 @@
 [
 	{
-		"name": "Shahed Drone",
-		"unitType": "Drone",
-		"uniqueTo": "Shaheds",
+		"name": "Шахед",
+		"unitType": "Дрон",
+		"uniqueTo": "Шахеды",
 		"movement": 4,
 		"strength": 3,
 		"rangedStrength": 12,

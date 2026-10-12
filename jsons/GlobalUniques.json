@@ -1,14 +1,14 @@
 {
 	"name": "Global Uniques",
 	"uniques": [
-		"Provides [1] [Hookahs] <for every [Hookah]> <hidden from users>",
-		"[+1 Happiness] <for every [Hookahs]>"
+		"Provides [1] [Кальяны] <for every [Кальян]> <hidden from users>",
+		"[+1 Happiness] <for every [Кальяны]>"
 	],
 	"unitUniques": [
-		"Gain [20] [Gold] <upon being defeated> <for [Shaheds] units> <hidden from users>",
-		"[Target Unit] gains the [Blast Contact] status for [1] turn(s) <upon entering combat> <for [Shaheds] units> <when defending> <vs [Melee] units> <hidden from users>",
-		"[Target Unit] gains the [Blast Contact] status for [1] turn(s) <upon entering combat> <for [{Shaheds} {Melee}] units> <when attacking> <hidden from users>",
-		"[This Unit] takes [100] damage <upon defeating a [Shaheds] unit> <for units with [Blast Contact]> <hidden from users>",
-		"[This Unit] loses the [Blast Contact] status <upon damaging a [Shaheds] unit> <hidden from users>"
+		"Gain [20] [Gold] <upon being defeated> <for [Шахеды] units> <hidden from users>",
+		"[Target Unit] gains the [Ближний контакт] status for [1] turn(s) <upon entering combat> <for [Шахеды] units> <when defending> <vs [Melee] units> <hidden from users>",
+		"[Target Unit] gains the [Ближний контакт] status for [1] turn(s) <upon entering combat> <for [{Шахеды} {Melee}] units> <when attacking> <hidden from users>",
+		"[This Unit] takes [100] damage <upon defeating a [Шахеды] unit> <for units with [Ближний контакт]> <hidden from users>",
+		"[This Unit] loses the [Ближний контакт] status <upon damaging a [Шахеды] unit> <hidden from users>"
 	]
 }

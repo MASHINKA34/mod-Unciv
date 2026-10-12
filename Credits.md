@@ -1,19 +1,20 @@
-# Credits
+# Авторы
 
-- Mod: [MASHINKA34](https://github.com/MASHINKA34)
-- Game: [Unciv](https://github.com/yairm210/Unciv) by yairm210 and contributors
+- Мод: [MASHINKA34](https://github.com/MASHINKA34)
+- Игра: [Unciv](https://github.com/yairm210/Unciv) — yairm210 и участники проекта
 
-## Images
+## Картинки
 
-<!-- Add every image here: file, author/tool, licence. -->
-- `Images/BuildingIcons/Hookah Lounge.png`, `Images/ResourceIcons/Hookah.png`,
-  `Images/ResourceIcons/Hookahs.png` —
-  original icons made for this mod by MASHINKA34 (sources in `art-src/`).
-- Shaheds: `Images/NationIcons/Shaheds.png`, `Images/UnitIcons/Shahed Drone.png`,
-  `Images/BuildingIcons/Assembly Shop.png`, unit sprites in `Images/TileSets/`,
-  portraits in `Images/UnitPortraits/`, `Images/BuildingPortraits/`, `Images/LeaderIcons/`,
-  and `preview.png` — original art made for this mod by MASHINKA34 (sources in `art-src/`).
+Вся графика нарисована специально для этого мода, автор — MASHINKA34
+(исходники в `art-src/`):
 
-## Sounds
+- Кальянная: `Images/BuildingIcons/Кальянная.png`, `Images/ResourceIcons/Кальян.png`,
+  `Images/ResourceIcons/Кальяны.png`.
+- Шахеды: `Images/NationIcons/Шахеды.png`, `Images/UnitIcons/Шахед.png`,
+  `Images/BuildingIcons/Сборочный цех.png`, спрайты дрона в `Images/TileSets/`,
+  портреты в `Images/UnitPortraits/`, `Images/BuildingPortraits/`, `Images/LeaderIcons/`.
+- Обложка мода: `preview.png`.
 
-<!-- Add every sound/music file here: file, author, licence. -->
+## Звуки
+
+Используются стандартные звуки игры.

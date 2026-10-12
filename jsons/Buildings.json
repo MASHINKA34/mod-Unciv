@@ -1,18 +1,18 @@
 [
 	{
-		"name": "Hookah Lounge",
+		"name": "Кальянная",
 		"cost": 60,
 		"hurryCostModifier": 25,
 		"happiness": 1,
 		"uniques": [
-			"Comment [Can be built in the same city again and again. Each Hookah Lounge permanently adds 1 Hookah, and each Hookah gives +1 Happiness]",
-			"Instantly provides [1] [Hookah]",
-			"Remove [Hookah Lounge] [in this city] <hidden from users>"
+			"Comment [Можно строить в одном городе снова и снова. Каждая кальянная навсегда добавляет 1 кальян, а каждый кальян даёт +1 к счастью]",
+			"Instantly provides [1] [Кальян]",
+			"Remove [Кальянная] [in this city] <hidden from users>"
 		]
 	},
 	{
-		"name": "Assembly Shop",
-		"uniqueTo": "Shaheds",
+		"name": "Сборочный цех",
+		"uniqueTo": "Шахеды",
 		"replaces": "Workshop",
 		"maintenance": 2,
 		"production": 3,

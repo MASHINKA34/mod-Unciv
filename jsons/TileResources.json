@@ -1,6 +1,6 @@
 [
 	{
-		"name": "Hookah",
+		"name": "Кальян",
 		"resourceType": "Strategic",
 		"uniques": [
 			"Stockpiled",
@@ -12,10 +12,10 @@
 		]
 	},
 	{
-		"name": "Hookahs",
+		"name": "Кальяны",
 		"resourceType": "Strategic",
 		"uniques": [
-			"Comment [Every Hookah Lounge ever built gives 1 Hookah. Each Hookah gives +1 Happiness. Hookahs can be traded to other civilizations]",
+			"Comment [Каждая построенная кальянная даёт 1 кальян. Каждый кальян даёт +1 к счастью. Кальяны можно передавать другим цивилизациям по сделке]",
 			"AI will buy at [100] Gold",
 			"Excluded from map editor",
 			"Doesn't generate naturally"

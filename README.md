@@ -1,6 +1,7 @@
-# mod-Unciv
+# Кальянная и Шахеды — мод для Unciv
 
 Мод для [Unciv](https://github.com/yairm210/Unciv) — open-source ремейка Civilization V.
+Весь мод на русском языке.
 
 ## Кальянная
 
@@ -14,10 +15,6 @@
 - Кальянами можно торговать в дипломатии, как железом или лошадьми: сделка идёт
   30 ходов, на это время счастье переходит к партнёру. ИИ покупает кальян за 100
   золота (если у него меньше двух) и продаёт по 50 за штуку.
-
-*Hookah Lounge: a building available to every civilization from the start. It can be
-built in the same city again and again; each one permanently adds a Hookah worth
-+1 Happiness. Hookahs can be traded like any strategic resource.*
 
 ## Шахеды
 
@@ -38,9 +35,6 @@ built in the same city again and again; each one permanently adds a Hookah worth
 Особое здание **Сборочный цех** (вместо мастерской): +3 производства вместо +2,
 новые боевые юниты сразу получают 10 опыта.
 
-*Shaheds: a new civilization led by Saddam Hussein — cheap expendable drones,
-cheaper armies, gold for kills and for every unit lost in battle.*
-
 ## Установка на Android
 
 1. Установите Unciv (Google Play, F-Droid или `Unciv-signed.apk` из
@@ -50,22 +44,19 @@ cheaper armies, gold for kills and for every unit lost in battle.*
 4. Новая игра: **«Начать новую игру»** → **«Моды-расширения»** → отметьте мод.
 
 Обновление: «Моды» → **«Обновить [мод]»** (или удалить и скачать заново).
-
-## Installation (English)
-
-Main menu → **Mods** → **Download mod from URL** → `https://github.com/MASHINKA34/mod-Unciv`.
-Then enable it under **Extension mods** when starting a new game.
+Описания стандартных механик игра показывает на языке своих настроек — для
+полностью русского текста выберите в Unciv «Настройки» → «Язык» → «Русский».
 
 ## Разработка
 
-- Проверка и упаковка картинок (нужны Python 3 и Java 21):
+Проверка и упаковка картинок (нужны Python 3 и Java 21):
 
-  ```
-  python tools/check_mod.py
-  ```
+```
+python tools/check_mod.py
+```
 
-  Android не умеет упаковывать картинки, поэтому `game.atlas`, `game*.png` и
-  `Atlases.json` собираются этой командой и коммитятся в репозиторий.
+Android не умеет упаковывать картинки, поэтому `game.atlas`, `game*.png` и
+`Atlases.json` собираются этой командой и коммитятся в репозиторий.
 
 ## Авторы
 

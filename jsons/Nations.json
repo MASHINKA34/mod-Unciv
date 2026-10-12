@@ -1,38 +1,38 @@
 [
 	{
-		"name": "Shaheds",
-		"leaderName": "Saddam Hussein",
-		"adjective": ["Shahed"],
+		"name": "Шахеды",
+		"leaderName": "Саддам Хусейн",
+		"adjective": ["шахедский"],
 		"preferredVictoryType": "Domination",
 
-		"startIntroPart1": "Saddam Hussein, leader of the Shaheds! Born in 1937 in the village of Al-Awja near Tikrit, you rose through the Ba'ath Party and ruled Iraq from 1979 to 2003. Your rule was marked by long wars with Iran and Kuwait and by harsh repression at home, and it ended with the invasion of 2003.",
-		"startIntroPart2": "Now a new nation gathers under your banner. Its weapon is the swarm: countless cheap drones that fly where armies cannot pass. Will the swarm darken the skies of the whole world?",
+		"startIntroPart1": "Саддам Хусейн, вождь Шахедов! Вы родились в 1937 году в деревне Эль-Ауджа под Тикритом, поднялись через партию Баас и правили Ираком с 1979 по 2003 год. Ваше правление запомнилось долгими войнами с Ираном и Кувейтом и жёсткими репрессиями внутри страны и закончилось вторжением 2003 года.",
+		"startIntroPart2": "Теперь под вашим знаменем собирается новый народ. Его оружие — рой: бесчисленные дешёвые дроны, которые летят туда, где не пройдёт ни одна армия. Затмит ли рой небо над всем миром?",
 
-		"declaringWar": "The sky above your cities no longer belongs to you.",
-		"attacked": "You have stirred the swarm. Now listen to it buzz.",
-		"defeated": "The swarm scatters... but it always returns.",
-		"introduction": "I am Saddam Hussein. My drones have been watching you for quite some time.",
+		"declaringWar": "Небо над вашими городами вам больше не принадлежит.",
+		"attacked": "Вы растревожили рой. Теперь слушайте, как он жужжит.",
+		"defeated": "Рой рассеян... но он всегда возвращается.",
+		"introduction": "Я — Саддам Хусейн. Мои дроны давно за вами наблюдают.",
 
-		"neutralHello": "Speak. The swarm is listening.",
-		"hateHello": "What now? My drones are already fueled.",
+		"neutralHello": "Говори. Рой слушает.",
+		"hateHello": "Что ещё? Мои дроны уже заправлены.",
 
-		"tradeRequest": "A fair deal. Even drones need fuel.",
-		"afterPeace": "Peace, then. The drones will wait in their hangars.",
+		"tradeRequest": "Честная сделка. Даже дронам нужно топливо.",
+		"afterPeace": "Что ж, мир. Дроны подождут в ангарах.",
 
 		"outerColor": [58, 64, 42],
 		"innerColor": [235, 212, 150],
-		"uniqueName": "The Swarm",
+		"uniqueName": "Рой",
 		"uniques": [
 			"[+25]% Production when constructing [Military] units [in all cities]",
 			"[-33]% maintenance costs <for [Military] units>",
 			"Earn [50]% of killed [Military] unit's [Cost] as [Gold]",
 			"[+15]% Strength <for [Military] units> <when adjacent to a [Military] unit>",
-			"Comment [Each military unit lost in battle gives 20 Gold]",
-			"Comment [Whoever kills a Shahed unit in close combat dies in the explosion. Ranged attacks are safe]"
+			"Comment [Каждый боевой юнит, погибший в бою, приносит 20 золота]",
+			"Comment [Кто убьёт юнита Шахедов в ближнем бою — сам погибнет от взрыва. Выстрел издалека безопасен]"
 		],
-		"cities": ["Baghdad", "Tikrit", "Al-Awja", "Basra", "Mosul", "Samarra", "Ramadi", "Fallujah",
-			"Nasiriyah", "Amarah", "Kut", "Hillah", "Diwaniyah", "Baqubah", "Haditha", "Tal Afar",
-			"Anah", "Rutba", "Al-Qaim", "Samawah", "Balad", "Baiji", "Zubair", "Fao", "Umm Qasr", "Habbaniyah"],
-		"spyNames": ["Rashid", "Tariq", "Karim", "Faisal", "Jamal", "Nadia", "Layla", "Hassan", "Samir", "Zaid"]
+		"cities": ["Багдад", "Тикрит", "Эль-Ауджа", "Басра", "Мосул", "Самарра", "Рамади", "Фаллуджа",
+			"Насирия", "Амара", "Эль-Кут", "Хилла", "Эд-Дивания", "Баакуба", "Хадита", "Телль-Афар",
+			"Ана", "Рутба", "Эль-Каим", "Самава", "Балад", "Байджи", "Эз-Зубайр", "Фао", "Умм-Каср", "Хаббания"],
+		"spyNames": ["Рашид", "Тарик", "Карим", "Фейсал", "Джамаль", "Надия", "Лейла", "Хасан", "Самир", "Зейд"]
 	}
 ]

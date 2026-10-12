@@ -246,20 +246,29 @@ def check_text_files() -> int:
         errors += 1
 
     image_dirs = sorted(p for p in REPO_ROOT.iterdir() if p.is_dir() and re.fullmatch(r"Images(\..+)?", p.name))
-    image_count = 0
+    image_count, non_ascii = 0, []
     for image_dir in image_dirs:
         for path in sorted(image_dir.rglob("*")):
             if not path.is_file():
                 continue
             name = rel(path)
             if not name.isascii():
-                LOG.error("%s: non-ASCII path, the texture packer/atlas requires ASCII-only names", name)
-                errors += 1
+                non_ascii.append(name)
             if path.suffix.lower() in IMAGE_EXTENSIONS:
                 image_count += 1
             elif path.name != "TexturePacker.settings":
                 LOG.warning("%s: not an image, the packer ignores it", name)
     LOG.info("Found %d image(s) in %s", image_count, [p.name for p in image_dirs] or "no Images folder")
+    # The mod is Russian-only by design, so object (= image) names are Cyrillic. Unciv docs advise ASCII
+    # because some desktop locales read atlases in a non-UTF-8 charset; Android always uses UTF-8.
+    if non_ascii:
+        LOG.warning("%d image path(s) are non-ASCII (e.g. %s): fine on Android, desktop players need a UTF-8 "
+                    "locale; the packed atlas must be UTF-8 (checked below)", len(non_ascii), non_ascii[0])
+    for atlas in sorted(REPO_ROOT.glob("*.atlas")):
+        if read_utf8_no_bom(atlas) is None:
+            errors += 1
+        else:
+            LOG.debug("%s: valid UTF-8", rel(atlas))
     return errors
 
 
@@ -362,6 +371,29 @@ def ensure_unciv_jar(version: str | None, offline: bool) -> Path:
 
 # --------------------------------------------------------------------------- step 4: mod-ci
 
+def invalidate_stale_atlas() -> None:
+    """Unciv's packer only compares modification times, so renamed or deleted images leave a stale
+    game.atlas behind. Compare region names with the files in Images/ and force a repack on mismatch."""
+    images, atlas = REPO_ROOT / "Images", REPO_ROOT / "game.atlas"
+    if not images.is_dir() or not atlas.is_file():
+        LOG.debug("Atlas freshness check skipped (Images/ or game.atlas missing)")
+        return
+    expected = {p.relative_to(images).with_suffix("").as_posix() for p in images.rglob("*")
+                if p.is_file() and p.suffix.lower() in IMAGE_EXTENSIONS}
+    text = atlas.read_text(encoding="utf-8", errors="replace").splitlines()
+    packed = {line.strip() for line in text
+              if line.strip() and not line.startswith((" ", "\t")) and ":" not in line and not line.endswith(".png")}
+    if expected == packed:
+        LOG.info("game.atlas lists the same %d image(s) as Images/: no forced repack", len(packed))
+        return
+    LOG.warning("game.atlas is stale: %d image(s) missing from it %s, %d no longer in Images/ %s; deleting "
+                "game.atlas and game*.png to force a repack", len(expected - packed), sorted(expected - packed)[:5],
+                len(packed - expected), sorted(packed - expected)[:5])
+    for path in [atlas, *REPO_ROOT.glob("game*.png")]:
+        path.unlink()
+        LOG.info("Deleted %s", rel(path))
+
+
 def run_mod_ci(jar: Path, allow_warnings: bool) -> int:
     LOG.info("Step 4/5: running Unciv mod-ci (pack images + autoupdate uniques + validate ruleset)")
     java = shutil.which("java")
@@ -372,6 +404,7 @@ def run_mod_ci(jar: Path, allow_warnings: bool) -> int:
 
     has_git = shutil.which("git") is not None
     before = git_status_snapshot() if has_git else set()
+    invalidate_stale_atlas()
 
     # Force UTF-8 console output, otherwise Windows code pages turn Unciv's bracket glyphs into '?'
     cmd = [java, "-Dstdout.encoding=UTF-8", "-Dstderr.encoding=UTF-8", "-jar", str(jar), "mod-ci"]
